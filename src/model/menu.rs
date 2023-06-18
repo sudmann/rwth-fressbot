@@ -119,8 +119,8 @@ impl Dish {
         write!(html, "{}", self.ingreds.join(", "))?;
 
         if !self.labels.is_empty() {
-            let label_emoj: String = self.labels.iter().map(|l| format!(" {l}")).collect();
-            write!(html, " ({})", label_emoj)?;
+            let label_emoj: Vec<_> = self.labels.iter().map(|l| format!("{l}")).collect();
+            write!(html, " {}", label_emoj.join(" "))?;
         }
 
         write!(html, " – <strong>{}</strong>", self.price)?;
