@@ -6,7 +6,7 @@ use scraper::{ElementRef, Html};
 use strum::EnumCount;
 
 use crate::model::{
-    menu::{Dish, Menu, MenuExtra},
+    menu::{Dish, Label, Menu, MenuExtra},
     Canteen,
 };
 
@@ -211,9 +211,23 @@ impl HtmlMenuFetcher {
             .ok_or(anyhow!(".menue-price contains no text"))?
             .to_owned();
 
+        let labels: Vec<_> = tr
+            .value()
+            .classes()
+            .filter_map(|cls| match cls {
+                "Fisch" => Some(Label::Fish),
+                "OLV" => Some(Label::Veggie),
+                "vegan" => Some(Label::Vegan),
+                "Geflügel" => Some(Label::Chicken),
+                "Schwein" => Some(Label::Pork),
+                "Rind" => Some(Label::Beef),
+                _ => None,
+            })
+            .collect();
+
         Ok((
             category.to_owned(),
-            Dish::new(dish_name.to_owned(), dish_descs, vec![], price),
+            Dish::new(dish_name.to_owned(), dish_descs, labels, price),
         ))
     }
 
