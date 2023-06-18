@@ -159,8 +159,8 @@ pub enum Label {
     Fish,
     #[strum(serialize = "🐷")]
     Pork,
-    #[strum(serialize = "🌱")]
+    #[strum(serialize = "🥑")]
     Vegan,
-    #[strum(serialize = "🍆")]
+    #[strum(serialize = "🌱")]
     Veggie,
 }
