@@ -273,9 +273,10 @@ impl HtmlMenuFetcher {
                     .map(|txt_node| txt_node.trim().to_string())
                     .collect::<Vec<_>>();
 
-                let (first, last) = extras.split_at(extras.len() - 1);
-
-                let extras = first.join(", ") + " oder " + &last[0];
+                let extras = match extras.len().checked_sub(1).map(|idx| extras.split_at(idx)) {
+                    None => extras.join(""),
+                    Some((init, last)) => init.join(", ") + " oder " + &last[0],
+                };
 
                 Ok(MenuExtra::new(category, extras))
             })
