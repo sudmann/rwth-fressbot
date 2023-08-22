@@ -48,8 +48,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wireguard
       - name: Install wireguard config
+        env:
+          WIREGUARD_CONF: ${{ secrets.WIREGUARD_CONFIG }}
         run: |
-          echo ${{ secrets.WIREGUARD_CONFIG }} > gh-actions.conf
+          echo $WIREGUARD_CONF > gh-actions.conf
+          ls -R
           sudo mv gh-actions.conf /etc/wireguard
       - name: Start wireguard
-        run: sudo wg-quick up github || exit 1
+        run: sudo wg-quick up gh-actions || exit 1
