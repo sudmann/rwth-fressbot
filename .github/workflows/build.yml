@@ -1,9 +1,9 @@
-name: build
-run-name: Build cargo project
+name: build-and-deploy
+run-name: Build and Deploy
 on: [push]
 jobs:
-  cross-compile-arm:
-    name: Rust build for ${{matrix.target}}
+  build:
+    name: Build (${{matrix.target}})
     runs-on: [ubuntu-latest]
     strategy:
       matrix:
@@ -23,9 +23,32 @@ jobs:
           use-cross: true
           command: build
           args: --release --target ${{matrix.target}}
-      - name: Upload atrifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: rwth-ressbot-${{matrix.target}}
+          name: rwth-fressbot-${{matrix.target}}
           path: target/${{matrix.target}}/release/rwth-fressbot
           if-no-files-found: error
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: 
+          - armv7-unknown-linux-gnueabihf
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: rwth-fressbot-${{matrix.target}}
+      - name: Display file structure
+        run: ls -R
+      - name: Install wireguard
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wireguard
+      - name: Install wireguard config
+        run: |
+          echo ${{ secrets.WIREGUARD_CONFIG }} > gh-actions.conf
+          sudo mv gh-actions.conf /etc/wireguard
+      - name: Start wireguard
+        run: sudo wg-quick up github || exit 1
