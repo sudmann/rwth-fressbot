@@ -41,9 +41,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: rwth-fressbot-${{matrix.target}}
-  wireguard:
-    runs-on: ubuntu-latest
-    steps:
       - name: Display file structure
         run: ls -R
       - name: Install wireguard
@@ -60,3 +57,23 @@ jobs:
           sudo mv gh-actions.conf /etc/wireguard
       - name: Start wireguard
         run: sudo wg-quick up gh-actions || exit 1
+      - name: Copy binary to server
+        uses: appleboy/scp-action@v0.0.1
+        with:
+          host: ${{ vars.RASPI_IP_LOCAL }}
+          username: ${{ vars.RASPI_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          source: "rwth-fressbot"
+          target: "/home/${{ vars.RASPI_USER }}/rwth-fressbot/artifacts"
+      - name: Install binary
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.RASPI_IP_LOCAL }}
+          username: ${{ vars.RASPI_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          script: |
+            cd /home/${{ vars.RASPI_USER }}/rwth-fressbot/artifacts
+            sudo install -D -m 755 -o root rwth-fressbot /bin
+            sudo systemctl restart rwth-fressbot.service
