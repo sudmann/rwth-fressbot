@@ -17,6 +17,8 @@ jobs:
           toolchain: nightly
           target: ${{matrix.target}}
       - uses: Swatinem/rust-cache@v2
+        with:
+          cache-all-crates: true
       - name: Build release for ${{matrix.target}}
         uses: actions-rs/cargo@v1
         with:
