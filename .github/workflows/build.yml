@@ -1,0 +1,31 @@
+name: build
+run-name: Build cargo project
+on: [push]
+jobs:
+  cross-compile-arm:
+    name: Rust build for ${{matrix.target}}
+    runs-on: [ubuntu-latest]
+    strategy:
+      matrix:
+        target:
+          - armv7-unknown-linux-gnueabihf
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install rust toolchain nightly ${{matrix.target}}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          target: ${{matrix.target}}
+          default: true
+      - name: Build release for ${{matrix.target}}
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target ${{matrix.target}}
+      - name: Upload atrifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: rwth-ressbot-${{matrix.target}}
+          path: target/${{matrix.target}}/release/rwth-fressbot
+          if-no-files-found: error
