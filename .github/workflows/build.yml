@@ -56,7 +56,7 @@ jobs:
       - name: Start wireguard
         run: sudo wg-quick up gh-actions || exit 1
       - name: Copy binary to server
-        uses: appleboy/scp-action@v0.0.1
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ vars.RASPI_IP_LOCAL }}
           username: ${{ vars.RASPI_USER }}
