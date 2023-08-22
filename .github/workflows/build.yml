@@ -79,3 +79,5 @@ jobs:
             cd /home/${{ vars.RASPI_USER }}/rwth-fressbot/artifacts
             sudo install -D -m 755 -o root rwth-fressbot /bin
             sudo systemctl restart rwth-fressbot.service
+      - name: Shutdown wireguard
+        run: udo wg-quick down gh-actions
