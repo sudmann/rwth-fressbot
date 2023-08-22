@@ -69,7 +69,7 @@ jobs:
           source: "rwth-fressbot"
           target: "/home/${{ vars.RASPI_USER }}/rwth-fressbot/artifacts"
       - name: Install binary
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ vars.RASPI_IP_LOCAL }}
           username: ${{ vars.RASPI_USER }}
