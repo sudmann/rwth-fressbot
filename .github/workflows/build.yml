@@ -53,6 +53,7 @@ jobs:
         run: |
           echo $WIREGUARD_CONF > gh-actions.conf
           ls -R
+          cat gh-actions.conf
           sudo mv gh-actions.conf /etc/wireguard
       - name: Start wireguard
         run: sudo wg-quick up gh-actions || exit 1
