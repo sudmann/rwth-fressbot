@@ -43,8 +43,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: rwth-fressbot-${{matrix.target}}
-      - name: Display file structure
-        run: ls -R
       - name: Install wireguard
         run: |
           sudo apt-get update
@@ -54,8 +52,6 @@ jobs:
           WIREGUARD_CONF: ${{ secrets.WIREGUARD_CONFIG }}
         run: |
           echo "$WIREGUARD_CONF" > gh-actions.conf
-          ls -R
-          cat gh-actions.conf
           sudo mv gh-actions.conf /etc/wireguard
       - name: Start wireguard
         run: sudo wg-quick up gh-actions || exit 1
