@@ -33,15 +33,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    strategy:
-      matrix:
-        target: 
-          - armv7-unknown-linux-gnueabihf
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
-          name: rwth-fressbot-${{matrix.target}}
+          name: rwth-fressbot-aarch64-unknown-linux-gnu
       - name: Install wireguard
         run: |
           sudo apt-get update
