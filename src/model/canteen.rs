@@ -108,10 +108,12 @@ pub(super) mod parser {
     }
 
     fn parse_bistro(input: &str) -> ParseResult {
-        let (input, _) = tuple((
-            tag_no_case("bistro"),
-            space1,
-            opt(tag_no_case("templergraben")),
+        let (input, _) = alt((
+            recognize(tuple((tag_no_case("super"), space0, tag_no_case("C")))),
+            recognize(tuple((
+                tag_no_case("bistro"),
+                opt(tuple((space1, tag_no_case("templergraben")))),
+            ))),
         ))(input)?;
 
         Ok((input, Canteen::Bistro))
