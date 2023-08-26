@@ -24,9 +24,8 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --release --target ${{matrix.target}} --features vendored-openssl
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+          args: --release --target ${{matrix.target}} --features native-tls-vendored
+      - uses: actions/upload-artifact@v3
         with:
           name: rwth-fressbot-${{matrix.target}}
           path: target/${{matrix.target}}/release/rwth-fressbot
