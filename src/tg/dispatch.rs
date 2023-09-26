@@ -95,7 +95,7 @@ pub mod handler {
             use teloxide::prelude::*;
 
             use crate::{
-                domain::fetch::HtmlMenuFetcher,
+                domain::fetch::HtmlMenuFetcherWithCache,
                 domain::model::{Canteen, DayOfWeek, Menu},
                 tg::command::DailyArgs,
             };
@@ -115,7 +115,7 @@ pub mod handler {
 
             pub async fn fetch_daily_menu(
                 args: (NaiveDate, Canteen),
-                fetcher: HtmlMenuFetcher,
+                fetcher: HtmlMenuFetcherWithCache,
             ) -> Result<Menu, std::sync::Arc<anyhow::Error>> {
                 let (date, canteen) = args;
 
