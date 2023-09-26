@@ -8,7 +8,7 @@ use nom::{
 };
 use teloxide::utils::command::ParseError;
 
-use crate::model::{Canteen, DayOfWeek};
+use crate::domain::model::{Canteen, DayOfWeek};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Command {
     Cancel,
@@ -89,7 +89,7 @@ mod internal {
 
 #[cfg(test)]
 mod test {
-    use crate::{model::DayOfWeek, tg::command::DailyArgs};
+    use crate::{domain::model::DayOfWeek, tg::command::DailyArgs};
 
     use super::Command;
 

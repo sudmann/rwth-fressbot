@@ -13,8 +13,8 @@ pub mod handler {
     };
 
     use crate::{
-        menu::err::FetcherError,
-        model::Canteen,
+        domain::fetch::err::FetcherError,
+        domain::model::Canteen,
         tg::command::{Command, DailyArgs},
     };
 
@@ -27,13 +27,15 @@ pub mod handler {
             .map_async(handler::proj::fetch_daily_menu)
             .branch(
                 dptree::filter_map(
-                    |res: Result<crate::model::menu::Menu, std::sync::Arc<anyhow::Error>>| res.ok(),
+                    |res: Result<crate::domain::model::Menu, std::sync::Arc<anyhow::Error>>| {
+                        res.ok()
+                    },
                 )
                 .endpoint(handler::endpoint::menu_by_date),
             )
             .branch(
                 dptree::filter_map(
-                    |res: Result<crate::model::menu::Menu, std::sync::Arc<anyhow::Error>>| {
+                    |res: Result<crate::domain::model::Menu, std::sync::Arc<anyhow::Error>>| {
                         res.err()
                     },
                 )
@@ -93,8 +95,8 @@ pub mod handler {
             use teloxide::prelude::*;
 
             use crate::{
-                menu::HtmlMenuFetcher,
-                model::{menu::Menu, Canteen, DayOfWeek},
+                domain::fetch::HtmlMenuFetcher,
+                domain::model::{Canteen, DayOfWeek, Menu},
                 tg::command::DailyArgs,
             };
 
@@ -147,7 +149,7 @@ pub mod handler {
             };
 
             use crate::{
-                model::{menu::Menu, Canteen},
+                domain::model::{Canteen, Menu},
                 tg::{
                     command::DailyArgs,
                     handler::{BotDialogue, HandlerResult},
