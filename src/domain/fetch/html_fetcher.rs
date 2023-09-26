@@ -5,12 +5,12 @@ use chrono::NaiveDate;
 use scraper::{ElementRef, Html};
 use strum::EnumCount;
 
-use crate::model::{
+use crate::domain::model::{
     menu::{Dish, Label, Menu, MenuExtra},
     Canteen,
 };
 
-use self::err::FetcherError;
+use super::err::FetcherError;
 
 fn menu_url(canteen: Canteen) -> &'static str {
     lazy_static! {
@@ -129,12 +129,12 @@ impl HtmlMenuFetcher {
             }
         });
 
-        let menu_table = menu_table.ok_or(err::FetcherError::ElementNotFound {
+        let menu_table = menu_table.ok_or(FetcherError::ElementNotFound {
             tag: "table".to_owned(),
             cls: vec!["menues".to_owned()],
         })?;
 
-        let extras_table = extras_table.ok_or(err::FetcherError::ElementNotFound {
+        let extras_table = extras_table.ok_or(FetcherError::ElementNotFound {
             tag: "table".to_owned(),
             cls: vec!["extras".to_owned()],
         })?;
@@ -300,33 +300,5 @@ pub mod re {
 
     lazy_static! {
         pub static ref DATE_REGEX: Regex = Regex::new(r"(\d{2}\.\d{2}\.\d{4})").unwrap();
-    }
-}
-
-pub mod err {
-    use chrono::NaiveDate;
-    use thiserror::Error;
-
-    use crate::model::Canteen;
-
-    #[derive(Debug, Clone, Error)]
-    pub enum FetcherError {
-        #[error("canteen {canteen} is closed on date {}", .date.format("%Y-%m-%d"))]
-        CanteenClosed { canteen: Canteen, date: NaiveDate },
-
-        #[error("No element {tag} with class(es) {:?}", &.cls[..])]
-        ElementNotFound { tag: String, cls: Vec<String> },
-    }
-}
-
-#[cfg(test)]
-mod test {
-    #[test]
-    fn test_menu_url() {
-        let canteen_url = super::menu_url(crate::model::Canteen::Vita);
-        assert_eq!(
-            canteen_url,
-            "https://www.studierendenwerk-aachen.de/de/Gastronomie/mensa-vita-wochenplan.html"
-        );
     }
 }

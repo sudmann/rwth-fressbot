@@ -4,6 +4,7 @@ pub mod menu;
 
 pub use canteen::Canteen;
 pub use day_of_week::DayOfWeek;
+pub use menu::Menu;
 
 pub mod parse {
     pub use super::canteen::parser::{parse as parse_canteen, CanteenParser};

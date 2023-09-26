@@ -7,8 +7,7 @@ use std::{
 };
 use teloxide::{dispatching::dialogue::InMemStorage, prelude::Dispatcher, Bot};
 
-mod menu;
-mod model;
+mod domain;
 mod tg;
 
 #[tokio::main]
@@ -23,7 +22,7 @@ async fn main() {
     let mut dispatcher = Dispatcher::builder(bot, tg::handler::schema())
         .dependencies(teloxide::dptree::deps![
             InMemStorage::<tg::state::DialogueState>::new(),
-            menu::HtmlMenuFetcher::new()
+            domain::fetch::HtmlMenuFetcher::new()
         ])
         .enable_ctrlc_handler()
         .build();
