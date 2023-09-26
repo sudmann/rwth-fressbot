@@ -1,6 +1,6 @@
 use strum_macros::{AsRefStr, Display, EnumCount, EnumIter};
 
-#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, EnumIter, AsRefStr, EnumCount)]
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, EnumIter, AsRefStr, EnumCount, Hash)]
 pub enum Canteen {
     #[strum(serialize = "Academica")]
     Academica,

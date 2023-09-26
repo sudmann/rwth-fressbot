@@ -1,4 +1,6 @@
+mod cache;
 mod html_fetcher;
+pub use cache::HtmlMenuFetcherWithCache;
 pub use html_fetcher::HtmlMenuFetcher;
 
 pub mod err {
