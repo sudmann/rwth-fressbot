@@ -22,7 +22,7 @@ async fn main() {
     let mut dispatcher = Dispatcher::builder(bot, tg::handler::schema())
         .dependencies(teloxide::dptree::deps![
             InMemStorage::<tg::state::DialogueState>::new(),
-            domain::fetch::HtmlMenuFetcher::new()
+            domain::fetch::HtmlMenuFetcherWithCache::new()
         ])
         .enable_ctrlc_handler()
         .build();
