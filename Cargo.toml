@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.71"
 chrono = { version = "0.4.26", features = ["unstable-locales"] }
-itertools = "0.10.5"
+itertools = "0.11.0"
 lazy_static = "1.4.0"
 log = { version = "0.4.17", features = ["std"] }
 lru = { version = "0.11.1", default-features = false }
@@ -17,9 +17,9 @@ phf = { version = "0.11", features = ["macros"] }
 pretty_env_logger = "0.5.0"
 regex = "1.8.3"
 reqwest = { version = "0.11.17", features = ["native-tls"] }
-scraper = "0.16.0"
-strum = "0.24.1"
-strum_macros = "0.24.3"
+scraper = "0.17.0"
+strum = "0.25.0"
+strum_macros = "0.25.2"
 teloxide = { version = "0.12.2", features = ["macros"] }
 thiserror = "1.0.40"
 tokio = { version = "1.28.0", features = ["full"] }
