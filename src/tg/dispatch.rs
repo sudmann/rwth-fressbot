@@ -47,7 +47,10 @@ pub mod handler {
                         dptree::case![FetcherError::CanteenClosed { canteen, date }]
                             .endpoint(handler::endpoint::err_canteen_closed),
                     ),
-                ),
+                )
+                .chain(dptree::inspect(|err: std::sync::Arc<anyhow::Error>| {
+                    log::error!("{err}");
+                })),
             )
             .branch(dptree::endpoint(handler::endpoint::generic_failure));
 
