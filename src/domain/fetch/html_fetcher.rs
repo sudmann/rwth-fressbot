@@ -139,25 +139,25 @@ impl HtmlMenuFetcher {
             cls: vec!["extras".to_owned()],
         })?;
 
-        let dishes = self.parse_menu_table(menu_table)?;
+        let dishes = self.parse_menu_table(menu_table);
         let extras = self.parse_extras_table(extras_table)?;
 
         Ok(Menu::new(dishes, extras))
     }
 
-    fn parse_menu_table(&self, table: ElementRef) -> anyhow::Result<HashMap<String, Vec<Dish>>> {
+    fn parse_menu_table(&self, table: ElementRef) -> HashMap<String, Vec<Dish>> {
         lazy_static! {
             static ref ROW: scraper::Selector = scraper::Selector::parse("tbody > tr").unwrap();
         }
 
-        let dishes: anyhow::Result<HashMap<String, Vec<Dish>>> = table
+        let dishes: HashMap<String, Vec<Dish>> = table
             .select(&ROW)
-            .map(|tr| self.parse_menu_dish(tr))
-            .fold(Ok(HashMap::new()), |acc, val| {
-                let (cat, dish) = val?;
-                let mut map = acc?;
+            .filter_map(|tr| self.parse_menu_dish(tr).ok())
+            .fold(HashMap::new(), |acc, val| {
+                let (cat, dish) = val;
+                let mut map = acc;
                 map.entry(cat).or_insert(vec![]).push(dish);
-                Ok(map)
+                map
             });
 
         dishes
