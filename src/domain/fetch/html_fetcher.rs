@@ -250,11 +250,10 @@ impl HtmlMenuFetcher {
                         )
                     })
                     .next()
-                    .ok_or(anyhow!("No span with class \"menue-category\""))?
-                    .text()
-                    .next()
-                    .ok_or(anyhow!(".menue-category contains no text"))?
-                    .trim()
+                    .and_then(|elm| elm.text().next())
+                    .map(|text| text.trim())
+                    // Fallback to the empty string as a category if none is given
+                    .unwrap_or("")
                     .to_owned();
 
                 let extras = cells
