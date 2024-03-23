@@ -205,11 +205,8 @@ impl HtmlMenuFetcher {
         let price = tr
             .select(&PRICE)
             .next()
-            .ok_or(anyhow!("No span with class \"menue-price\""))?
-            .text()
-            .next()
-            .ok_or(anyhow!(".menue-price contains no text"))?
-            .to_owned();
+            .and_then(|elm| elm.text().next())
+            .map(|text| text.to_owned());
 
         let labels: Vec<_> = tr
             .value()

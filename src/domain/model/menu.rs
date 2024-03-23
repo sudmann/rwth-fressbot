@@ -96,11 +96,11 @@ pub struct Dish {
     name: String,
     ingreds: Vec<String>,
     labels: Vec<Label>,
-    price: String,
+    price: Option<String>,
 }
 
 impl Dish {
-    pub fn new(name: String, descs: Vec<String>, labels: Vec<Label>, price: String) -> Self {
+    pub fn new(name: String, descs: Vec<String>, labels: Vec<Label>, price: Option<String>) -> Self {
         Self {
             name,
             ingreds: descs,
@@ -123,7 +123,9 @@ impl Dish {
             write!(html, " {}", label_emoj.join(" "))?;
         }
 
-        write!(html, " – <strong>{}</strong>", self.price)?;
+        if let Some(ref price) = self.price {
+            write!(html, " – <strong>{}</strong>", price)?;
+        }
 
         Ok(html)
     }
