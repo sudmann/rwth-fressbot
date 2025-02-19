@@ -50,6 +50,8 @@ jobs:
           sudo mv gh-actions.conf /etc/wireguard
       - name: Start wireguard
         run: sudo wg-quick up gh-actions || exit 1
+      - name: Ensure VPN connection
+        run: ping -c 5 ${{ vars.RASPI_IP_LOCAL }}
       - name: Copy binary to server
         uses: appleboy/scp-action@v0.1.4
         with:
