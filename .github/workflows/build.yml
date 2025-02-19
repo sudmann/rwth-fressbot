@@ -25,7 +25,7 @@ jobs:
           use-cross: true
           command: build
           args: --release --target ${{matrix.target}} --features native-tls-vendored
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: rwth-fressbot-${{matrix.target}}
           path: target/${{matrix.target}}/release/rwth-fressbot
@@ -35,7 +35,7 @@ jobs:
     needs: build
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: rwth-fressbot-aarch64-unknown-linux-gnu
       - name: Install wireguard
