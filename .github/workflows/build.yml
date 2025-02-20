@@ -41,6 +41,7 @@ jobs:
           github_ip: ${{ vars.DBG_SSH_GH_IP }}
           ssh_public_key: ${{ vars.DBG_SSH_PUBLIC_KEY }}
   deploy:
+    if: false
     runs-on: ubuntu-latest
     needs: build
     steps:
