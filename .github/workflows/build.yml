@@ -31,7 +31,7 @@ jobs:
           path: target/${{matrix.target}}/release/rwth-fressbot
           if-no-files-found: error
   debug-connection:
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
     steps:
       - name: WireGuard SSH
         uses: omahn/wireguard-ssh-github-action@v1.4
