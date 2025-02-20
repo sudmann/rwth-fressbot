@@ -30,6 +30,16 @@ jobs:
           name: rwth-fressbot-${{matrix.target}}
           path: target/${{matrix.target}}/release/rwth-fressbot
           if-no-files-found: error
+  debug-connection:
+    runs-on: ubuntu-latests
+    steps:
+      - name: WireGuard SSH
+        uses: omahn/wireguard-ssh-github-action@v1.4
+        with:
+          peer_ip: ${{ vars.DBG_SSH_PEER_IP }}
+          peer_port: ${{ vars.DBG_SSH_PEER_PORT }}
+          github_ip: ${{ vars.DBG_SSH_GH_IP }}
+          ssh_public_key: ${{ vars.DBG_SSH_PUBLIC_KEY }}
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -53,7 +63,7 @@ jobs:
       - name: Ensure VPN connection
         run: ping -c 5 ${{ vars.RASPI_IP_LOCAL }}
       - name: Copy binary to server
-        uses: appleboy/scp-action@v0.1.4
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ vars.RASPI_IP_LOCAL }}
           username: ${{ vars.RASPI_USER }}
