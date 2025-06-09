@@ -39,7 +39,7 @@ jobs:
         with:
           name: rwth-fressbot-aarch64-unknown-linux-gnu
       - name: Ensure connection
-        run: ping -c 5 ${{ vars.RASPI_HOST }}
+        run: ping6 -c 5 ${{ vars.RASPI_HOST }}
       - name: Copy binary to server
         uses: appleboy/scp-action@v0.1.7
         with:
