@@ -70,8 +70,8 @@ jobs:
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           script: |
             cd /home/${{ vars.RASPI_USER }}/rwth-fressbot/artifacts
-            sudo systemctl stop rwth-fressbot.service
-            sudo install -D -m 755 -o root rwth-fressbot /bin
+            sudo systemctl stop rwth-fressbot.service || echo "RWTH Fressbot is not running."
+            sudo install -D -m 755 -o pi rwth-fressbot /opt/rwth-fressbot
             sudo systemctl start rwth-fressbot.service
       - name: Shutdown wireguard
         run: sudo wg-quick down gh-actions
