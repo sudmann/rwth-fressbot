@@ -43,7 +43,7 @@ jobs:
       - name: Copy binary to server
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ vars.RASPI_IP_LOCAL }}
+          host: ${{ vars.RASPI_HOST }}
           username: ${{ vars.RASPI_USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
