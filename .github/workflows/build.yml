@@ -2,6 +2,11 @@ name: build-and-deploy
 run-name: Build and Deploy
 on: [push, workflow_dispatch]
 jobs:
+  test-ipv6:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure ipv6 works
+        run: curl -6 https://google.com
   build:
     name: Build (${{matrix.target}})
     runs-on: [ubuntu-latest]
