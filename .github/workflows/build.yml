@@ -74,4 +74,6 @@ jobs:
             sudo install -D -m 755 -o pi rwth-fressbot /opt/rwth-fressbot
             sudo systemctl start rwth-fressbot.service
       - name: Shutdown wireguard
-        run: sudo wg-quick down gh-actions
+        if: always()
+        continue-on-error: true
+        run: sudo wg-quick down wg0
