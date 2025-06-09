@@ -2,11 +2,6 @@ name: build-and-deploy
 run-name: Build and Deploy
 on: [push, workflow_dispatch]
 jobs:
-  test-ipv6:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ensure ipv6 works
-        run: curl -6 https://google.com
   build:
     name: Build (${{matrix.target}})
     runs-on: [ubuntu-latest]
@@ -43,12 +38,24 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: rwth-fressbot-aarch64-unknown-linux-gnu
-      #- name: Ensure connection
-      #  run: ip addr show && ping6 -c 5 ${{ vars.RASPI_HOST }}
+      - name: Install wireguard
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wireguard resolvconf
+      - name: Install wireguard config
+        env:
+          WIREGUARD_CONF: ${{ secrets.WIREGUARD_CONFIG }}
+        run: |
+          echo "$WIREGUARD_CONF" > wg0.conf
+          sudo mv wg0.conf /etc/wireguard
+      - name: Start wireguard
+        run: sudo wg-quick up wg0 || exit 1
+      - name: Ensure VPN connection
+        run: ping -c 5 ${{ vars.RASPI_IP_LOCAL }}
       - name: Copy binary to server
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ vars.RASPI_HOST }}
+          host: ${{ vars.RASPI_IP_LOCAL }}
           username: ${{ vars.RASPI_USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
@@ -57,12 +64,14 @@ jobs:
       - name: Install binary
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ vars.RASPI_HOST }}
+          host: ${{ vars.RASPI_IP_LOCAL }}
           username: ${{ vars.RASPI_USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           script: |
             cd /home/${{ vars.RASPI_USER }}/rwth-fressbot/artifacts
-            sudo systemctl stop rwth-fressbot.service || echo "No instance of bot running"
+            sudo systemctl stop rwth-fressbot.service
             sudo install -D -m 755 -o root rwth-fressbot /bin
             sudo systemctl start rwth-fressbot.service
+      - name: Shutdown wireguard
+        run: sudo wg-quick down gh-actions
