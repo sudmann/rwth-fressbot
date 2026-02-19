@@ -68,49 +68,49 @@ pub(super) mod parser {
         }
     }
 
-    pub fn parse_day_of_week(input: &str) -> ParseResult {
+    pub fn parse_day_of_week(input: &str) -> ParseResult<'_> {
         alt((
             today, tomorrow, monday, tuesday, wednesday, thursday, friday,
         ))(input)
     }
 
-    fn today(input: &str) -> ParseResult {
+    fn today(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((tag_no_case("heute"), tag_no_case("hoide")))(input)?;
 
         Ok((input, DayOfWeek::Today))
     }
 
-    fn tomorrow(input: &str) -> ParseResult {
+    fn tomorrow(input: &str) -> ParseResult<'_> {
         let (input, _) = tag_no_case("morgen")(input)?;
 
         Ok((input, DayOfWeek::Tomorrow))
     }
 
-    fn monday(input: &str) -> ParseResult {
+    fn monday(input: &str) -> ParseResult<'_> {
         let (input, _) = tag_no_case("montag")(input)?;
 
         Ok((input, DayOfWeek::Monday))
     }
 
-    fn tuesday(input: &str) -> ParseResult {
+    fn tuesday(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((tag_no_case("dienstag"), tag_no_case("schnitzeldienstag")))(input)?;
 
         Ok((input, DayOfWeek::Tuesday))
     }
 
-    fn wednesday(input: &str) -> ParseResult {
+    fn wednesday(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((tag_no_case("mittwoch"), tag_no_case("mettwoch")))(input)?;
 
         Ok((input, DayOfWeek::Wednesday))
     }
 
-    fn thursday(input: &str) -> ParseResult {
+    fn thursday(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((tag_no_case("donnerstag"), tag_no_case("vizefreitag")))(input)?;
 
         Ok((input, DayOfWeek::Thursday))
     }
 
-    fn friday(input: &str) -> ParseResult {
+    fn friday(input: &str) -> ParseResult<'_> {
         let (input, _) = tag_no_case("freitag")(input)?;
 
         Ok((input, DayOfWeek::Friday))
