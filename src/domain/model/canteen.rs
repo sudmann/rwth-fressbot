@@ -46,7 +46,7 @@ pub(super) mod parser {
         }
     }
 
-    pub fn parse(input: &str) -> ParseResult {
+    pub fn parse(input: &str) -> ParseResult<'_> {
         let (input, _) = opt(tuple((tag_no_case("mensa"), space1)))(input)?;
 
         // Make sure the end of the name is a word boundary, i.e. either whitespace or the end of the string
@@ -69,7 +69,7 @@ pub(super) mod parser {
         Ok(result)
     }
 
-    fn parse_academica(input: &str) -> ParseResult {
+    fn parse_academica(input: &str) -> ParseResult<'_> {
         let (input, _) = tag_no_case("ac")(input)?;
         let (input, _) = alt((tag_no_case("a"), tag_no_case("er")))(input)?;
         let (input, _) = opt(tuple((
@@ -80,7 +80,7 @@ pub(super) mod parser {
         Ok((input, Canteen::Academica))
     }
 
-    fn parse_ahorn(input: &str) -> ParseResult {
+    fn parse_ahorn(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((
             recognize(tuple((
                 tag_no_case("ahorn"),
@@ -101,13 +101,13 @@ pub(super) mod parser {
         Ok((input, Canteen::Ahorn))
     }
 
-    fn parse_bayernallee(input: &str) -> ParseResult {
+    fn parse_bayernallee(input: &str) -> ParseResult<'_> {
         let (input, _) = tag_no_case("bayernallee")(input)?;
 
         Ok((input, Canteen::Bayernallee))
     }
 
-    fn parse_bistro(input: &str) -> ParseResult {
+    fn parse_bistro(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((
             recognize(tuple((tag_no_case("super"), space0, tag_no_case("C")))),
             recognize(tuple((
@@ -119,7 +119,7 @@ pub(super) mod parser {
         Ok((input, Canteen::Bistro))
     }
 
-    fn parse_eupener(input: &str) -> ParseResult {
+    fn parse_eupener(input: &str) -> ParseResult<'_> {
         let (input, _) = tuple((
             tag_no_case("eupener"),
             opt(tuple((
@@ -133,13 +133,13 @@ pub(super) mod parser {
         Ok((input, Canteen::Eupener))
     }
 
-    fn parse_jülich(input: &str) -> ParseResult {
+    fn parse_jülich(input: &str) -> ParseResult<'_> {
         let (input, _) = tag_no_case("jülich")(input)?;
 
         Ok((input, Canteen::Jülich))
     }
 
-    fn parse_kmac(input: &str) -> ParseResult {
+    fn parse_kmac(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((
             tag_no_case("kmac"),
             recognize(tuple((
@@ -157,13 +157,13 @@ pub(super) mod parser {
         Ok((input, Canteen::KMAC))
     }
 
-    fn parse_südpark(input: &str) -> ParseResult {
+    fn parse_südpark(input: &str) -> ParseResult<'_> {
         let (input, _) = tuple((tag_no_case("süd"), opt(tag_no_case("park"))))(input)?;
 
         Ok((input, Canteen::Süd))
     }
 
-    fn parse_vita(input: &str) -> ParseResult {
+    fn parse_vita(input: &str) -> ParseResult<'_> {
         let (input, _) = alt((
             recognize(tuple((
                 tag_no_case("vit"),
