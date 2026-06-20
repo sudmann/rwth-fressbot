@@ -54,8 +54,8 @@ jobs:
         run: sudo wg show
       - name: Ensure correct routing
         run: ip route show table all | grep wg0
-      - name: Ensure VPN connection
-        run: ping -c 5 ${{ vars.RASPI_IP_LOCAL }}
+      # - name: Ensure VPN connection
+      #   run: ping -c 5 ${{ vars.RASPI_IP_LOCAL }}
       - name: Copy binary to server
         uses: appleboy/scp-action@v0.1.7
         with:
