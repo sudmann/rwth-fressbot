@@ -23,6 +23,14 @@ jobs:
           EOF
       - name: Bring up tunnel
         run: sudo wg-quick up wg0
+      - name: TCP reachability check (port-only, no auth)
+        run: |
+          # apt-get part is a safety net — nc/netcat-openbsd is usually
+          # preinstalled on ubuntu-latest, but just in case:
+          which nc || sudo apt-get install -y netcat-openbsd
+          # -z: scan only, don't send/receive data — just check if the
+          # SYN/SYN-ACK handshake completes. -v: verbose. -w 5: 5s timeout.
+          nc -zv -w 5 ${{ vars.RASPI_IP_LOCAL }} 22 || echo "nc failed to connect to ${{ vars.RASPI_IP_LOCAL }}:22"
       - name: Concurrent capture + ping + handshake check
         run: |
           # -w writes raw packets to a file instead of just printing them,
