@@ -28,19 +28,29 @@ jobs:
           # -w writes raw packets to a file instead of just printing them,
           # so we can inspect the capture afterward as an artifact.
           # timeout kills tcpdump after 10s in case ping finishes early.
-          sudo timeout 30 tcpdump -ni wg0 icmp -w icmp.pcap &
-          TCPDUMP_PID=$!
+          sudo timeout 10 tcpdump -ni wg0 icmp -w icmp.pcap > tcpdump.log 2>&1 &          TCPDUMP_PID=$!
 
-          sleep 5   # let tcpdump attach before traffic starts
+          sleep 1   # let tcpdump attach before traffic starts
           ping -c 5 -W 2 ${{ vars.RASPI_USER }} || true
+          PING_STATUS=$?
 
-          wait "$TCPDUMP_PID" || true   # || true: timeout's nonzero exit shouldn't fail the step
+          wait "$TCPDUMP_PID"
+
+          echo "----- tcpdump log -----"
+          cat tcpdump.log
 
           echo "----- wg show after test -----"
           sudo wg show
 
           echo "----- packets seen on wg0 -----"
-          sudo tcpdump -nr icmp.pcap:w
+          if [ -f icmp.pcap ]; then
+            sudo tcpdump -nr icmp.pcap
+          else
+            echo "icmp.pcap was never created — see tcpdump.log above"
+          fi
+
+          echo "ping exit status: $PING_STATUS"
+          exit "$PING_STATUS"
       - name: Upload capture for inspection
         if: always()
         uses: actions/upload-artifact@v4
