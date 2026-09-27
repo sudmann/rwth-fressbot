@@ -34,6 +34,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Wait for WireGuard endpoint DNS
+        env:
+          WG_ENDPOINT_HOST: daswg.v6.rocks
+          MAX_TRIES: 6
+          DELAY_SECONDS: 10
+        run: |
+          for i in $(seq 1 "$MAX_TRIES"); do
+            if getent ahosts "$WG_ENDPOINT_HOST" > /dev/null; then
+              echo "Endpoint aufgelöst: $(getent ahosts "$WG_ENDPOINT_HOST" | awk 'NR==1{print $1}')"
+              exit 0
+            fi
+            echo "DNS noch nicht auflösbar, Versuch $i/$MAX_TRIES …"
+            sleep "$DELAY_SECONDS"
+          done
+          echo "::error::WireGuard-Endpoint $WG_ENDPOINT_HOST nach $MAX_TRIES Versuchen nicht auflösbar"
+          exit 1
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
