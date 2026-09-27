@@ -40,7 +40,7 @@ jobs:
           TCPDUMP_PID=$!
 
           sleep 1   # let tcpdump attach before traffic starts
-          ping -c 5 -W 2 ${{ vars.RASPI_IP_LOCAL }} || true
+          ping -c 5 -W 2 ${{ vars.RASPI_IP_LOCAL }} || echo "ping failed"
           PING_STATUS=$?
 
           wait "$TCPDUMP_PID"
