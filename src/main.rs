@@ -16,7 +16,7 @@ async fn main() {
 
     let token = get_token_from_env();
 
-    log::info!("Bot token is \"{token}\"");
+    log::info!("Bot token is \"{}\"", mask_token(&token));
 
     let bot = Bot::new(token);
     let mut dispatcher = Dispatcher::builder(bot, tg::handler::schema())
@@ -57,4 +57,13 @@ fn get_token_from_env() -> String {
                 exit(1);
             }
         })
+}
+
+fn mask_token(token: &str) -> String {
+    let len = token.len();
+    let visible_start = len.saturating_sub(6);
+
+    let mut res = "*".repeat(visible_start);
+    res.push_str(&token[visible_start..]);
+    res
 }
