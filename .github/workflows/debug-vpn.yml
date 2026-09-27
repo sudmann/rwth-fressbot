@@ -10,6 +10,10 @@ jobs:
   debug-vpn:
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve hostname
+        run: |
+          getent ahosts daswg.v6.rocks || echo "getent: fehlgeschlagen"
+          dig A daswg.v6.rocks +short
       - name: Install required packages
         run: |
           sudo apt-get update
@@ -21,6 +25,10 @@ jobs:
           sudo tee /etc/wireguard/wg0.conf > /dev/null <<'EOF'
           ${{ secrets.WIREGUARD_CONFIG }}#
           EOF
+      - name: Check config
+        run: |
+          echo "CR-Symbols: $(sudo grep -c $'\r' /etc/wireguard/wg0.conf)"
+          sudo grep '^Endpoint' /etc/wireguard/wg0.conf | sed 's/[^:]*=//' | od -c | tail -n 3
       - name: Bring up tunnel
         run: sudo wg-quick up wg0
       - name: TCP reachability check (port-only, no auth)
